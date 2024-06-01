@@ -82,7 +82,7 @@ write_geoparquet <- function(x,
     if (geometry_encoding == "arrow") {
       .tbl <- as_geoarrow(x)
     } else {
-      .tbl <- arrow::Table$create(encode_wkb(x))
+      .tbl <- as_wkbarrow(x)
     }
 
     if (covering) {

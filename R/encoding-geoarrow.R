@@ -1,18 +1,3 @@
-.as_geoarrow_helper <- function(x) {
-  if (typeof(x) == "list") {
-    x <- lapply(x, .as_geoarrow_helper)
-  }
-
-  if (is.matrix(x)) {
-    setNames(
-      as.data.frame(x),
-      c("x", "y", "z")[seq_len(ncol(x))]
-    )
-  } else {
-    unclass(x)
-  }
-}
-
 as_geoarrow <- function(.x, ...) {
   UseMethod("as_geoarrow")
 }
@@ -30,4 +15,19 @@ as_geoarrow.sf <- function(.x, ...) {
 
 as_geoarrow.sfc <- function(.x, ...) {
   arrow::Array$create(.as_geoarrow_helper(.x))
+}
+
+.as_geoarrow_helper <- function(x) {
+  if (typeof(x) == "list") {
+    x <- lapply(x, .as_geoarrow_helper)
+  }
+
+  if (is.matrix(x)) {
+    setNames(
+      as.data.frame(x),
+      c("x", "y", "z")[seq_len(ncol(x))]
+    )
+  } else {
+    unclass(x)
+  }
 }
