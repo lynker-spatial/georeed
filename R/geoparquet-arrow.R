@@ -7,7 +7,7 @@
 #' @inheritDotParams arrow::read_parquet
 #'
 #' @return An `sf` table if `as_data_frame` is `TRUE` (the default), or an
-#'        Arrow [Table] otherwise.
+#'        [arrow::Table] otherwise.
 #'
 #' @export
 read_geoparquet <- function(file,
