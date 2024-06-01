@@ -66,11 +66,24 @@ write_geoparquet <- function(x,
                              coerce_timestamps = NULL,
                              allow_truncated_timestamps = FALSE,
                              ...,
+                             geometry_encoding = c("wkb", "arrow"),
                              covering = FALSE) {
 
+  geometry_encoding <- match.arg(geometry_encoding)
+
   if (inherits(x, "sf")) {
-    metadata <- geoparquet_metadata(x, ..., covering = covering)
-    .tbl <- arrow::Table$create(encode_wkb(x))
+    metadata <- geoparquet_metadata(
+      x,
+      ...,
+      encoding = geometry_encoding,
+      covering = covering
+    )
+
+    if (geometry_encoding == "arrow") {
+      .tbl <- as_geoarrow(x)
+    } else {
+      .tbl <- arrow::Table$create(encode_wkb(x))
+    }
 
     if (covering) {
       .tbl$bbox <- arrow::StructArray$create(

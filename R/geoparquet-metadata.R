@@ -55,7 +55,7 @@ geoparquet_column_metadata <- function(encoding, geometry_types, ...) {
 #'
 #' @return `list`
 #' @export
-geoparquet_metadata <- function(.data, ..., covering = FALSE) {
+geoparquet_metadata <- function(.data, ..., encoding = "WKB", covering = FALSE) {
   if (!inherits(.data, "sf")) {
     stop("`.data` must be an `sf` object.")
   }
@@ -75,8 +75,25 @@ geoparquet_metadata <- function(.data, ..., covering = FALSE) {
       GEOMETRYCOLLECTION = "GeometryCollection"
     )
 
+    if (encoding == "arrow") {
+      encoding <- tolower(substring(
+        class(sf::st_geometry(.data))[1],
+        5
+      ))
+
+      if (!encoding %in% c(
+        "point", "linestring", "polygon",
+        "multipoint", "multilinestring", "multipolygon"
+      )) {
+        stop(
+          "GeoArrow encoding for type `", encoding, "` not supported.",
+          call. = FALSE
+        )
+      }
+    }
+
     .call_args <- list(
-      encoding = "WKB",
+      encoding = encoding,
       geometry_types = .type,
       crs = sf::st_crs(.data[[col]])$Wkt,
       bbox = as.numeric(sf::st_bbox(.data[[col]]))
