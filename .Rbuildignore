@@ -1,1 +1,4 @@
 ^LICENSE\.md$
+^example/
+^docs/
+^\_pkgdown\.yml$

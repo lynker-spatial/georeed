@@ -8,7 +8,6 @@
 #'
 #' @return An `sf` table if `as_data_frame` is `TRUE` (the default), or an
 #'        [arrow::Table] otherwise.
-#'
 #' @export
 read_geoparquet <- function(file,
                             col_select = NULL,
@@ -43,15 +42,17 @@ read_geoparquet <- function(file,
 #' format backed by the '[Parquet](https://parquet.apache.org/)' file format.
 #'
 #' @inheritParams arrow::write_parquet
+#' @param x `sf`, `data.frame`, `arrow::RecordBatch`, or `arrow::Table`
 #' @param ... Additional arguments passed to [geoparquet_metadata].
-#' @param covering `logical(1)`
-#'        `r lifecycle::badge("experimental")`
-#'        If `TRUE`, includes a `bbox` column in `x` and adds
-#'        the experimental covering metadata from the GeoParquet 1.1
-#'        specification.
-#' @seealso geoparquet_metadata
+#' @param geo_encoding \emph{\code{character(1)}} `r lifecycle::badge('experimental')`\cr
+#' Either `wkb` or `arrow`. If `wkb`, geometry is encoded in WKB
+#' If `arrow`, then the geometry is encoded in GeoArrow format.
+#' @param geo_covering \emph{\code{logical(1)}} `r lifecycle::badge('experimental')`\cr
+#' If `TRUE`, includes a `bbox` column in `x` and adds
+#' the experimental covering metadata from the GeoParquet 1.1
+#' specification.
+#' @seealso [geoparquet_metadata]
 #' @return The input `x` invisibly
-#'
 #' @export
 write_geoparquet <- function(x,
                              sink,
@@ -66,26 +67,26 @@ write_geoparquet <- function(x,
                              coerce_timestamps = NULL,
                              allow_truncated_timestamps = FALSE,
                              ...,
-                             geometry_encoding = c("wkb", "arrow"),
-                             covering = FALSE) {
+                             geo_encoding = c("wkb", "arrow"),
+                             geo_covering = FALSE) {
 
-  geometry_encoding <- match.arg(geometry_encoding)
+  geo_encoding <- match.arg(geo_encoding)
 
   if (inherits(x, "sf")) {
     metadata <- geoparquet_metadata(
       x,
       ...,
-      encoding = geometry_encoding,
-      covering = covering
+      encoding = geo_encoding,
+      covering = geo_covering
     )
 
-    if (geometry_encoding == "arrow") {
+    if (geo_encoding == "arrow") {
       .tbl <- as_geoarrow(x)
     } else {
       .tbl <- as_wkbarrow(x)
     }
 
-    if (covering) {
+    if (geo_covering) {
       .tbl$bbox <- arrow::StructArray$create(
         as.data.frame(do.call(rbind, lapply(sf::st_geometry(x), sf::st_bbox)))
       )

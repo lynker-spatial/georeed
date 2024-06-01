@@ -1,0 +1,15 @@
+reference:
+  - title: Read data
+    desc: Read GeoParquet/GeoArrow data into R.
+    contents:
+    - starts_with("read")
+
+  - title: Write data
+    desc: Write to GeoParquet/GeoArrow.
+    contents:
+    - starts_with("write")
+
+  - title: Coerce data
+    desc: Convert data into arrow types.
+    contents:
+    - starts_with("as")

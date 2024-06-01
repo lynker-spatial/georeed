@@ -43,7 +43,10 @@ as_geoarrow.sfc <- function(.x, ...) {
 #' @keywords internal
 .as_geoarrow_helper <- function(x) {
   if (is.matrix(x)) {
-    setNames(as.data.frame(x), c("x", "y", "z")[seq_len(ncol(x))])
+    idx <- seq_len(ncol(x))
+    x <- as.data.frame(x)
+    names(x) <- c("x", "y", "z")[idx]
+    x
   } else {
     if (typeof(x) == "list") {
       x <- lapply(x, .as_geoarrow_helper)
