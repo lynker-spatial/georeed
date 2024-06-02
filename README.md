@@ -28,7 +28,7 @@ pak::pkg_install("lynker-spatial/georeed")
 
 ## Roadmap
 
-| Feature               | Status                                                       |
+| Feature               | Status[^1]                                                   |
 |-----------------------|--------------------------------------------------------------|
 | Read GeoParquet       | :large_blue_circle: (WKB), :large_orange_diamond: (GeoArrow) |
 | Read GeoArrow (IPC)   | :red_circle:                                                 |
@@ -38,3 +38,6 @@ pak::pkg_install("lynker-spatial/georeed")
 | Write GeoArrow (File) | :red_circle:                                                 |
 | Scanning Support      | :red_circle:                                                 |
 | Spatial Filtering     | :red_circle:                                                 |
+
+[^1]: Completed: :large_blue_circle:; In-progress:
+    :large_orange_diamond:; Not started :red_circle:.
