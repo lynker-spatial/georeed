@@ -1,12 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# geoparquet
+# georeed
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-`geoparquet` provides utilities for read/write operations on
+`georeed` provides utilities for geospatial data in [Apache
+Arrow](https://arrow.apache.org/), such as reading and writing
 [GeoParquet](https://geoparquet.org/) files, with full compliance of the
 [v1.0.0 specification](https://geoparquet.org/releases/v1.0.0/), and
 partial compliance with the in-development [v1.1.0
@@ -14,13 +15,26 @@ specification](https://github.com/opengeospatial/geoparquet/blob/eec4cf8e6891147
 
 ## Installation
 
-You can install the development version of `geoparquet` from
+You can install the development version of `georeed` from
 [GitHub](https://github.com/) with either `remotes` or `pak`:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("lynker-spatial/geoparquet")
+remotes::install_github("lynker-spatial/georeed")
 
 # install.packages("pak")
-pak::pkg_install("lynker-spatial/geoparquet")
+pak::pkg_install("lynker-spatial/georeed")
 ```
+
+## Roadmap
+
+| Feature               | Status                                                       |
+|-----------------------|--------------------------------------------------------------|
+| Read GeoParquet       | :large_blue_circle: (WKB), :large_orange_diamond: (GeoArrow) |
+| Read GeoArrow (IPC)   | :red_circle:                                                 |
+| Read GeoArrow (File)  | :red_circle:                                                 |
+| Write GeoParquet      | :large_blue_circle: (WKB), :large_blue_circle: (GeoArrow)    |
+| Write GeoArrow (IPC)  | :red_circle:                                                 |
+| Write GeoArrow (File) | :red_circle:                                                 |
+| Scanning Support      | :red_circle:                                                 |
+| Spatial Filtering     | :red_circle:                                                 |

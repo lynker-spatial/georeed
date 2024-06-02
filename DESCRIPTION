@@ -1,5 +1,5 @@
-Package: geoparquet
-Title: Interact with 'GeoParquet' using 'sf'
+Package: georeed
+Title: Interact with Geospatial Data in 'Apache Arrow'
 Version: 0.1.0.9000
 Authors@R: 
     person(given = "Justin",
@@ -9,8 +9,8 @@ Authors@R:
            comment = c(ORCID = "0000-0002-5233-5799"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
-URL: https://github.com/lynker-spatial/geoparquet
-BugReports: https://github.com/lynker-spatial/geoparquet/issues
+URL: https://github.com/lynker-spatial/georeed
+BugReports: https://github.com/lynker-spatial/georeed/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
