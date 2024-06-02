@@ -28,7 +28,7 @@ pak::pkg_install("lynker-spatial/georeed")
 
 ## Similar Packages
 
-- [geoarrow](https://github.com/paleolimbot/geoarrow)
+- [geoarrow](https://github.com/geoarrow/geoarrow-r)
 - [sfarrow](https://github.com/wcjochem/sfarrow)
 
 ## Roadmap
