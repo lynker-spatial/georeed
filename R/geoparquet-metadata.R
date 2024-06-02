@@ -133,3 +133,4 @@ geoparquet_metadata <- function(.data, ..., encoding = "WKB", covering = FALSE) 
     ...
   ), jsonlite::toJSON, auto_unbox = TRUE)
 }
+

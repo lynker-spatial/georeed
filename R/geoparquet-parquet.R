@@ -7,7 +7,7 @@
 #' @inheritDotParams arrow::read_parquet
 #'
 #' @return An `sf` table if `as_data_frame` is `TRUE` (the default), or an
-#'        [arrow::Table] otherwise.
+#'        `arrow::Table` otherwise.
 #' @export
 read_geoparquet <- function(file,
                             col_select = NULL,
@@ -16,20 +16,45 @@ read_geoparquet <- function(file,
                             mmap = TRUE,
                             ...) {
 
-  .tbl <- arrow::read_parquet(
-    file,
-    col_select = col_select,
-    as_data_frame = as_data_frame,
-    props = props,
-    mmap = mmap,
-    ...
-  )
+  .args <- list(...)
+  .args$file <- file
+  .args$col_select <- col_select
+  .args$as_data_frame <- FALSE
+  .args$props <- props
+  .args$mmap <- mmap
 
-
+  .tbl <- do.call(arrow::read_parquet, .args)
 
   if (as_data_frame) {
-    # Convert to `sf`
-    
+    .meta <- .tbl$metadata
+    .tbl <- dplyr::collect(.tbl)
+
+    if ("geo" %in% names(.meta)) {
+      # Convert to `sf`
+      geo <- jsonlite::fromJSON(.meta$geo)
+
+      for (nm in names(geo$columns)) {
+        col <- geo$columns[[nm]]
+        if (col$encoding == "wkb") {
+          .tbl[[nm]] <- sf::st_as_sfc(
+            x = .tbl[[nm]],
+            crs = sf::st_crs(col$crs)
+          )
+
+          # TODO: Assert col$geometry_types?
+          # TODO: Assert col$orientation?
+        } else {
+          # encoding is geoarrow, or unsupported
+          # FIXME: implement geoarrow reading,
+          #        needs: handle supported types,
+          #               probably in separate functions
+          warning("Reading non-WKB GeoParquet is currently unsupported.\n",
+                  "Returning as if `arrow::read_parquet` was called.",
+                  call. = FALSE)
+        }
+      }
+
+    }
   }
 
   return(.tbl)
@@ -51,7 +76,6 @@ read_geoparquet <- function(file,
 #' If `TRUE`, includes a `bbox` column in `x` and adds
 #' the experimental covering metadata from the GeoParquet 1.1
 #' specification.
-#' @seealso [geoparquet_metadata]
 #' @return The input `x` invisibly
 #' @export
 write_geoparquet <- function(x,
