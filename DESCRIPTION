@@ -1,11 +1,16 @@
 Package: geoparquet
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Interact with 'GeoParquet' using 'sf'
+Version: 0.1.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person(given = "Justin",
+           family = "Singh-Mohudpur",
+           role = c("aut", "cre"),
+           email = "justin@justinsingh.me",
+           comment = c(ORCID = "0000-0002-5233-5799"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
+URL: https://github.com/lynker-spatial/geoparquet
+BugReports: https://github.com/lynker-spatial/geoparquet/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
