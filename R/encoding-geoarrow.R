@@ -55,3 +55,15 @@ as_geoarrow.sfc <- function(.x, ...) {
     unclass(x)
   }
 }
+
+.from_geoarrow_helper <- function(x) {
+  if (is.data.frame(x)) {
+    as.matrix(x)
+  } else {
+    if (typeof(x) == "list") {
+      x <- lapply(x, .from_geoarrow_helper)
+    }
+
+    x
+  }
+}

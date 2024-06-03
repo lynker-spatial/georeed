@@ -72,8 +72,8 @@ geoparquet_metadata <- function(.data, ..., encoding = "WKB", covering = FALSE) 
   geom_columns <- geometry_columns(.data)
   column_meta  <- lapply(geom_columns, \(col) {
     # title case geometry per geoparquet spec
-    .type <- switch(
-      as.character(sf::st_geometry_type(.data[[col]], by_geometry = FALSE)),
+    .type <- unique(switch(
+      as.character(sf::st_geometry_type(.data[[col]], by_geometry = TRUE)),
       POINT = "Point",
       LINESTRING = "LineString",
       POLYGON = "Polygon",
@@ -81,13 +81,18 @@ geoparquet_metadata <- function(.data, ..., encoding = "WKB", covering = FALSE) 
       MULTILINESTRING = "MultiLineString",
       MULTIPOLYGON = "MultiPolygon",
       GEOMETRYCOLLECTION = "GeometryCollection"
-    )
+    ))
 
     if (encoding == "arrow") {
-      encoding <- tolower(substring(
-        class(sf::st_geometry(.data))[1],
-        5
-      ))
+      if (length(.type) > 1) {
+        stop(
+          "GeoArrow encoding only supports homogenous geometry types, but geometry contains `",
+          paste0(.type, collapse = "/"),
+          "`.",
+          call. = FALSE)
+      }
+
+      encoding <- tolower(.type)
 
       if (!encoding %in% c(
         "point", "linestring", "polygon",
@@ -98,6 +103,8 @@ geoparquet_metadata <- function(.data, ..., encoding = "WKB", covering = FALSE) 
           call. = FALSE
         )
       }
+    } else {
+      encoding <- toupper(encoding)
     }
 
     .call_args <- list(
@@ -106,6 +113,16 @@ geoparquet_metadata <- function(.data, ..., encoding = "WKB", covering = FALSE) 
       crs = sf::st_crs(.data[[col]])$Wkt,
       bbox = as.numeric(sf::st_bbox(.data[[col]]))
     )
+
+    if (.type %in% c("Polygon", "MultiPolygon")) {
+      .call_args$orientation <- "counterclockwise"
+    }
+
+    if (sf::st_is_longlat(.data)) {
+      .call_args$edges <- "spherical"
+    } else {
+      .call_args$edges <- "planar"
+    }
 
     if (covering) {
       .call_args$covering <- list(

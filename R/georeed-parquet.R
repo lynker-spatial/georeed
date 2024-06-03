@@ -35,7 +35,7 @@ read_geoparquet <- function(file,
 
       for (nm in names(geo$columns)) {
         col <- geo$columns[[nm]]
-        if (col$encoding == "wkb") {
+        if (toupper(col$encoding) == "WKB") {
           .tbl[[nm]] <- sf::st_as_sfc(
             x = .tbl[[nm]],
             crs = sf::st_crs(col$crs)
@@ -140,6 +140,7 @@ write_geoparquet <- function(x,
 }
 
 
+#' Vendored from arrow:::default_parquet_compression
 #' @keywords internal
 default_parquet_compression <- function() {
   if (arrow::codec_is_available("snappy")) {
